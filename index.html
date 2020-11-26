@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <div style="width: 800px;margin: 30px auto;">
+    <div style="width: 900px;margin: 30px auto;">
         <div style="display:flex">
             <span>owner：</span>
             <input type="text" id="gh-owner" style="margin-right:10px"></input>
@@ -15,6 +15,7 @@
             <input type="text" id="gh-repo" style="margin-right:10px"></input>
             <span>access_token：</span>
             <input type="text" id="gh-access_token"></input>
+            <button onclick="initGh()">初始化</button>
         </div>
         <div style="display: flex;">
             <div style="flex:1">
@@ -33,18 +34,24 @@
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <script src="https://unpkg.com/gh-uploader@0.0.4/index.js"></script>
+    <script src="index.js"></script>
     <script>
-        var gh = {
-            owner: $("#gh-owner").val(),
-            repo: $("#gh-repo").val(),
-            access_token: $("#gh-access_token").val(),
+        var ghUpload;
+
+        function initGh() {
+            var gh = {
+                owner: $("#gh-owner").val(),
+                repo: $("#gh-repo").val(),
+                access_token: $("#gh-access_token").val(),
+            }
+
+            gh = window.btoa && btoa(JSON.stringify(gh));
+            ghUpload = new GhUploader(gh);
         }
-        gh = window.btoa && btoa(JSON.stringify(gh));
-        var ghUpload = new GhUploader(gh);
+
 
         $("#gh-text-but").click(function () {
             ghUpload.put({
