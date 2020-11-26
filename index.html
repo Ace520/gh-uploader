@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8" />
+    <title>基于GitHub的文件管理器</title>
+</head>
+
+<body>
+    <div style="width: 800px;margin: 30px auto;">
+        <div style="display:flex">
+            <span>owner：</span>
+            <input type="text" id="gh-owner" style="margin-right:10px"></input>
+            <span>repo：</span>
+            <input type="text" id="gh-repo" style="margin-right:10px"></input>
+            <span>access_token：</span>
+            <input type="text" id="gh-access_token"></input>
+        </div>
+        <div style="display: flex;">
+            <div style="flex:1">
+                <h5>字符串上传</h5>
+                <div style="width: 320px;display:flex">
+                    <input style="flex:1" type="text" id="gh-text"></input><button id="gh-text-but">上传</button>
+                </div>
+                <h5>文件上传</h5>
+                <input type="file" id="gh-file" multiple></input>
+                <h5>拖拽上传</h5>
+                <div id="gh-upload" style="width: 320px;height: 320px;background-color: #fafbfc;"></div>
+            </div>
+            <div style="flex:1">
+                <h5>返回</h5>
+                <textarea id="res" style="width: 100%; height: 475px;padding:10px"></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="index.js"></script>
+    <script>
+        var gh = {
+            owner: $("#gh-owner").val(),
+            repo: $("#gh-repo").val(),
+            access_token: $("#gh-access_token").val(),
+        }
+        gh = window.btoa && btoa(JSON.stringify(gh));
+        var ghUpload = new GhUploader(gh);
+
+        $("#gh-text-but").click(function () {
+            ghUpload.put({
+                path: '1.txt',
+                content: $("#gh-text").val(),
+            }).then(function (res) {
+                console.log(res);
+                showRes(res);
+            }).catch(function (error) {
+                console.log(error);
+                showRes(error);
+            });
+        })
+
+        //file上传事件
+        $('#gh-file').change(e => {
+            let files = e.target.files || e.dataTransfer.files;
+            for (let i = 0; i < files.length; i++) {
+                ghUpload.put({
+                    path: files[i].name,
+                    content: files[i],
+                }).then(function (res) {
+                    console.log(res);
+                    showRes(res);
+                }).catch(function (error) {
+                    console.log(error);
+                    showRes(error);
+                });
+            }
+        });
+        //拖拽上传
+        $("#gh-upload").on({
+            dragenter: function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            },
+            dragover: function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            },
+            drop: function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                let files = e.originalEvent.dataTransfer.files;
+                for (let i = 0; i < files.length; i++) {
+                    ghUpload.put({
+                        path: files[i].name,
+                        content: files[i],
+                    }).then(function (res) {
+                        console.log(res);
+                        showRes(res);
+                    }).catch(function (error) {
+                        console.log(error);
+                        showRes(error);
+                    });
+                }
+            }
+        });
+
+        function showRes(res) {
+            $("#res").val(JSON.stringify(res, null, "\t"));
+            $("#res").val(JSON.stringify(res, null, 4));
+        }
+    </script>
+</body>
+
+</html>
