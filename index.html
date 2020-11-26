@@ -10,12 +10,12 @@
     <div style="width: 900px;margin: 30px auto;">
         <div style="display:flex">
             <span>owner：</span>
-            <input type="text" id="gh-owner" style="margin-right:10px"></input>
+            <input type="text" id="gh-owner" value="Ace520" style="margin-right:10px"></input>
             <span>repo：</span>
-            <input type="text" id="gh-repo" style="margin-right:10px"></input>
+            <input type="text" id="gh-repo" value="assets" style="margin-right:10px"></input>
             <span>access_token：</span>
-            <input type="text" id="gh-access_token"></input>
-            <button onclick="initGh()">初始化</button>
+            <input type="text" id="gh-access_token" value="787544f67a431b88d8983b002675a1ff4cee2dea"></input>
+            <input type="button" onclick="initGh()" value="初始化"></input>
         </div>
         <div style="display: flex;">
             <div style="flex:1">
@@ -37,7 +37,7 @@
 
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <script src="index.js"></script>
+    <script src="https://unpkg.com/gh-uploader@0.0.5/index.js"></script>
     <script>
         var ghUpload;
 
